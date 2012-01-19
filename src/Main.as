@@ -59,24 +59,11 @@
 				for (var sourceY:uint = 0; sourceY < (height); sourceY++)
 				{
 					var pixelLeft:uint = bmd.getPixel(sourceX, sourceY);
-					
-					var redLeft:uint = pixelLeft >> 16 & 0xFF;
-					var greenLeft:uint = pixelLeft >> 8 & 0xFF;
-					var blueLeft:uint = pixelLeft & 0xFF;
-					
 					var pixelRight:uint = bmd.getPixel(sourceX + 1, sourceY);
 					
-					var redRight:uint = pixelRight >> 16 & 0xFF;
-					var greenRight:uint = pixelRight >> 8 & 0xFF;
-					var blueRight:uint = pixelRight & 0xFF;
-					
-					var redDiff:uint = (redLeft > redRight) ? (redLeft - redRight) : (redRight - redLeft);
-					var greenDiff:uint = (greenLeft > greenRight) ? (greenLeft - greenRight) : (greenRight - greenLeft);
-					var blueDiff:uint = (blueLeft > blueRight) ? (blueLeft - blueRight) : (blueRight - blueLeft);
-					
-					totalRedDiff += redDiff;
-					totalGreenDiff += greenDiff;
-					totalBlueDiff += blueDiff;
+					totalRedDiff += getDiff(pixelLeft, pixelRight, RED);
+					totalGreenDiff += getDiff(pixelLeft, pixelRight, GREEN);
+					totalBlueDiff += getDiff(pixelLeft, pixelRight, BLUE);
 					
 					//var averageDiff:Number = (redDiff + greenDiff + blueDiff)/3;
 					//cmp.setPixel(sourceX, sourceY, makeGray(1-averageDiff/255));
