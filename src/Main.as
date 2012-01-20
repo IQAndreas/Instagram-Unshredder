@@ -1,5 +1,6 @@
 ﻿package 
 {
+	import flash.events.MouseEvent;
 	import flash.display.Shape;
 	import flash.display.Graphics;
 	import flash.display.BitmapData;
@@ -7,6 +8,7 @@
 	import flash.display.Sprite;
 	import flash.events.Event;
 
+	[SWF(backgroundColor="#000000", frameRate="31", width="640", height="359")]
 	public class Main extends Sprite
 	{
 		public function Main()
@@ -24,6 +26,25 @@
 		private var BeforeShredBMD:BitmapData = Bitmap(new BeforeShredBMP()).bitmapData;
 		
 		private function init():void
+		{
+			pizza = new Pizza(AfterShredBMD, 32);
+			bmp = new Bitmap(pizza.generatePicture());
+			this.addChild(bmp);
+			
+			stage.addEventListener(MouseEvent.CLICK, fixPicture);
+		}
+		
+		private var bmp:Bitmap;
+		private var pizza:Pizza;
+		
+		private function fixPicture(e:Event):void
+		{
+			pizza.mergeMostSimilar();
+			bmp.bitmapData = pizza.generatePicture();
+		}
+		
+		
+		private function testDiff():void
 		{
 			var bmd:BitmapData = AfterShredBMD;
 			
