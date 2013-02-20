@@ -1,5 +1,6 @@
 package 
 {
+	import flash.display.DisplayObjectContainer;
 	import flash.geom.Point;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -82,6 +83,21 @@ package
 		{
 			var index:int = vector.indexOf(item);
 			if (index >= 0) { vector.splice(index, 1); }
+		}
+		
+		// Make sure container is emptied first, (if you want it to be emptied that is)
+		public function fillContainer(container:DisplayObjectContainer, paddingX:Number = 8):void
+		{
+			var currentX:Number = 0;
+			for each (var slice:Slice in slices)
+			{
+				//Don't clone, just add. I'm being lazy but efficient here
+				// (even though I am creating a new Bitmap every time)
+				var bmp:Bitmap = new Bitmap(slice.bitmapData);
+				bmp.x = currentX;
+				currentX += bmp.width + paddingX;
+				container.addChild(bmp);
+			}
 		}
 		
 		public function generatePicture():BitmapData

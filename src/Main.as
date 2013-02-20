@@ -1,5 +1,6 @@
 ﻿package 
 {
+	import flash.filters.DropShadowFilter;
 	import flash.events.MouseEvent;
 	import flash.display.Shape;
 	import flash.display.Graphics;
@@ -8,7 +9,7 @@
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	[SWF(backgroundColor="#000000", frameRate="31", width="640", height="359")]
+	[SWF(backgroundColor="#666666", frameRate="31", width="860", height="420")]
 	public class Main extends Sprite
 	{
 		public function Main()
@@ -17,10 +18,12 @@
 			else { this.addEventListener(Event.ADDED_TO_STAGE, init); }
 		}
 		
+		// width="640", height="359"
 		[Embed(source="../assets/after_shred.png")]
 		private static var AfterShredBMP:Class;
 		private var AfterShredBMD:BitmapData = Bitmap(new AfterShredBMP()).bitmapData;
 		
+		// width="640", height="359"
 		[Embed(source="../assets/before_shred.png")]
 		private static var BeforeShredBMP:Class;
 		private var BeforeShredBMD:BitmapData = Bitmap(new BeforeShredBMP()).bitmapData;
@@ -28,21 +31,38 @@
 		private function init():void
 		{
 			pizza = new Pizza(AfterShredBMD, 32);
-			bmp = new Bitmap(pizza.generatePicture());
-			this.addChild(bmp);
+			
+			container = new Sprite();
+			container.filters = [new DropShadowFilter()];
+			this.addChild(container);
+			
+			updateContainer();
 			
 			stage.addEventListener(MouseEvent.CLICK, fixPicture);
+			trace("Click to continue fixing the picture.");
 		}
 		
-		private var bmp:Bitmap;
+		private var container:Sprite;
 		private var pizza:Pizza;
 		
 		private function fixPicture(e:Event):void
 		{
 			pizza.mergeMostSimilar();
-			bmp.bitmapData = pizza.generatePicture();
+			updateContainer();
 		}
 		
+		private function updateContainer():void
+		{
+			// Empty container
+			while (container.numChildren > 0)
+				{ container.removeChildAt(0); }
+			
+			pizza.fillContainer(container);
+			
+			// Center container
+			container.x = (stage.stageWidth - container.width) / 2;
+			container.y = (stage.stageHeight - container.height) / 2;
+		}
 		
 		private function testDiff():void
 		{
